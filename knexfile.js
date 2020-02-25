@@ -1,5 +1,4 @@
 // Update with your config settings.
-
 module.exports = {
 
   development: {
@@ -7,7 +6,18 @@ module.exports = {
     connection: {
       filename: './data/users.db3'
     },
-    UseNullAsDefault: true
+    useNullAsDefault: true,
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run('PRAGMA foreign_keys = ON', done);
+      },
+    },
+    migrations: {
+      directory: './data/migrations',
+    },
+    seeds: {
+      directory: './data/seeds',
+    }
   },
 
   staging: {

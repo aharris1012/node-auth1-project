@@ -3,25 +3,18 @@ const bcrypt = require('bcryptjs');
 const Users = require('../users/users-model');
 
 const usersRouter = require('../users/users-router.js');
-router.use('/users', usersRouter);
 
 router.get('/', (req, res) =>{
     res.send('<h1>Connected</h1>')
 });
 
 router.post('/register', (req, res) =>{
-    // const {username, password} = req.body
-    // Users.insert({username, password: bcrypt.hashSync(password, 3)})
-    //  .then(saved =>{
-    //      res.status(201).json({message:`ohh noooo`, saved});
-    //  }) .catch(err =>{
-    //      res.status(500).json({message: 'You have an error in register', error});
-    //  })//
-         
-    let {password}= req.body;
-    console.log(password)
-    const hash = bcrypt.hashSync(password, 3);
-    password = hash;
+    
+    let user = req.body;
+    console.log(user);
+    const hash = bcrypt.hashSync(user.password, 2);
+    user.password = hash;
+
     Users.add(user)
     .then(saved => {
         res.status(201).json(saved);
@@ -32,10 +25,8 @@ router.post('/register', (req, res) =>{
 })
 
 router.post('/login', (req, res) =>{
-    let { username, password } = req.body;
-    console.log(username)
-    console.log(password)
-    Users.findBy({username})
+    let { username, password } = req.body; 
+    Users.findBy({ username })
     .first()
     .then(user =>{
         if(user && bcrypt.compareSync(password, user.password)) {
@@ -47,4 +38,11 @@ router.post('/login', (req, res) =>{
     .catch(({ name, message ,stack}) =>{res.status(500).json({name, message, stack})})
 })
 
+router.get('/users', (req, res)=> {
+    Users.find().then(users => {
+        res.status(200).json({users})
+    }).catch(error => {
+        res.status(500).json(error)
+    })
+})
 module.exports = router;

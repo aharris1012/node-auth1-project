@@ -10,9 +10,18 @@ router.get('/', (req, res) =>{
 });
 
 router.post('/register', (req, res) =>{
-    let user = req.body;
-    let hash = bcrypt.hashSync(user.password, 13);
-    user.password = hash;
+    // const {username, password} = req.body
+    // Users.insert({username, password: bcrypt.hashSync(password, 3)})
+    //  .then(saved =>{
+    //      res.status(201).json({message:`ohh noooo`, saved});
+    //  }) .catch(err =>{
+    //      res.status(500).json({message: 'You have an error in register', error});
+    //  })//
+         
+    let {password}= req.body;
+    console.log(password)
+    const hash = bcrypt.hashSync(password, 3);
+    password = hash;
     Users.add(user)
     .then(saved => {
         res.status(201).json(saved);

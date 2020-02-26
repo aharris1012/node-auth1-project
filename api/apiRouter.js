@@ -39,7 +39,8 @@ router.post('/login', (req, res) =>{
 })
 
 router.get('/users', (req, res)=> {
-    Users.find().then(users => {
+    Users.find()
+        .then(users => {
         res.status(200).json({users})
     }).catch(error => {
         res.status(500).json(error)
